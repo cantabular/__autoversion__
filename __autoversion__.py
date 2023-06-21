@@ -4,7 +4,6 @@ or version control if installed with ``pip install --editable` or
 ``setup.py develop``
 """
 
-from __future__ import print_function, unicode_literals
 
 import os
 import re
@@ -25,7 +24,7 @@ else:
 orig = sys.modules[__name__]
 
 
-class Git(object):
+class Git:
 
     @classmethod
     def get_branch(cls, path):
@@ -53,7 +52,7 @@ class Git(object):
             v = re.search("-[0-9]+-", memo[path])
             if v is not None:
                 # Replace -n- with -branchname-n-
-                branch = r"-{0}-\1-".format(cls.get_branch(path))
+                branch = fr"-{cls.get_branch(path)}-\1-"
                 (memo[path], _) = re.subn("-([0-9]+)-", branch, memo[path], 1)
 
         return memo[path]
@@ -93,7 +92,7 @@ def getversion(package):
     """
     distribution = get_distribution(package)
     if distribution is None:
-        raise RuntimeError("Can't find distribution {0}".format(package))
+        raise RuntimeError(f"Can't find distribution {package}")
     repo_type = get_repo_type(distribution.location)
     if repo_type is None:
         return distribution.version
@@ -113,7 +112,7 @@ def version_from_frame(frame):
 
     module_name = module.__name__
 
-    variable = "AUTOVERSION_{}".format(module_name.upper())
+    variable = f"AUTOVERSION_{module_name.upper()}"
     override = os.environ.get(variable, None)
     if override is not None:
         return override
@@ -161,7 +160,7 @@ def tupleize_version(version):
     if version.startswith("<unknown"):
         return (("unknown",),)
 
-    split = re.split("(?:\.|(-))", version)
+    split = re.split(r"(?:\.|(-))", version)
     parsed = tuple(try_fix_num(x) for x in split if x)
 
     # Put the tuples in groups by "-"
