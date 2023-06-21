@@ -3,7 +3,7 @@ from distutils.core import setup
 
 conf = dict(
     name='autoversion',
-    version='1.2.2',
+    version='2.0.0',
     description="Obtain installed version of package automatically, even if "
                 "it is installed using editable or develop",
     long_description="\n".join(list(open("README"))[2:]).strip(),
